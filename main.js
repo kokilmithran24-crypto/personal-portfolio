@@ -64,3 +64,210 @@ if (contactForm) {
     window.location.href = mailto;
   });
 }
+
+// To-do list: CRUD, delegated events, filters and local persistence.
+(() => {
+  const list = document.querySelector('#todo-list');
+  const form = document.querySelector('#todo-form');
+  if (!list || !form) return;
+
+  const input = document.querySelector('#new-task');
+  const count = document.querySelector('#task-count');
+  const empty = document.querySelector('#empty-state');
+  const status = document.querySelector('#todo-status');
+  const clearButton = document.querySelector('#clear-completed');
+  const filterButtons = document.querySelector('.todo-filters');
+  const storageKey = 'portfolio-todo-tasks';
+  let tasks = [];
+  let filter = 'all';
+
+  try {
+    const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    if (Array.isArray(stored)) {
+      tasks = stored.filter(task =>
+        task && typeof task.id === 'string' &&
+        typeof task.text === 'string' &&
+        typeof task.completed === 'boolean'
+      );
+    }
+  } catch (error) {
+    status.textContent = 'Saved tasks could not be read. You can still add tasks in this session.';
+  }
+
+  function saveTasks() {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(tasks));
+    } catch (error) {
+      status.textContent = 'Your browser could not save changes. Check its storage settings.';
+    }
+  }
+
+  function announce(message) {
+    status.textContent = '';
+    window.setTimeout(() => { status.textContent = message; }, 20);
+  }
+
+  function render() {
+    list.replaceChildren();
+    const visibleTasks = tasks.filter(task =>
+      filter === 'all' ||
+      (filter === 'active' && !task.completed) ||
+      (filter === 'completed' && task.completed)
+    );
+
+    visibleTasks.forEach(task => {
+      const item = document.createElement('li');
+      item.className = 'todo-item' + (task.completed ? ' is-completed' : '');
+      item.dataset.id = task.id;
+
+      const checkbox = document.createElement('input');
+      checkbox.className = 'todo-check';
+      checkbox.type = 'checkbox';
+      checkbox.checked = task.completed;
+      checkbox.dataset.action = 'toggle';
+      checkbox.setAttribute('aria-label', (task.completed ? 'Mark as active: ' : 'Mark as completed: ') + task.text);
+
+      const text = document.createElement('span');
+      text.className = 'todo-text';
+      text.textContent = task.text;
+
+      const actions = document.createElement('div');
+      actions.className = 'todo-actions';
+
+      const edit = document.createElement('button');
+      edit.type = 'button';
+      edit.className = 'todo-action';
+      edit.dataset.action = 'edit';
+      edit.textContent = 'Edit';
+      edit.setAttribute('aria-label', 'Edit task: ' + task.text);
+
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'todo-action';
+      remove.dataset.action = 'delete';
+      remove.textContent = 'Delete';
+      remove.setAttribute('aria-label', 'Delete task: ' + task.text);
+
+      actions.append(edit, remove);
+      item.append(checkbox, text, actions);
+      list.append(item);
+    });
+
+    const remaining = tasks.filter(task => !task.completed).length;
+    count.textContent = remaining + (remaining === 1 ? ' task left' : ' tasks left');
+    empty.hidden = visibleTasks.length !== 0;
+    empty.textContent = tasks.length === 0
+      ? 'No tasks yet. Add one above to get started.'
+      : filter === 'active'
+        ? 'You have no active tasks. Nice work!'
+        : filter === 'completed'
+          ? 'No completed tasks yet.'
+          : 'No tasks to show.';
+    clearButton.disabled = !tasks.some(task => task.completed);
+    clearButton.style.opacity = clearButton.disabled ? '.5' : '1';
+  }
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const text = input.value.trim();
+    if (!text) {
+      input.focus();
+      return;
+    }
+    tasks.unshift({ id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2), text, completed: false });
+    saveTasks();
+    render();
+    input.value = '';
+    input.focus();
+    announce('Task added: ' + text);
+  });
+
+  list.addEventListener('change', event => {
+    const checkbox = event.target.closest('[data-action="toggle"]');
+    if (!checkbox) return;
+    const item = checkbox.closest('[data-id]');
+    const task = tasks.find(entry => entry.id === item.dataset.id);
+    if (!task) return;
+    task.completed = checkbox.checked;
+    saveTasks();
+    render();
+    announce(task.completed ? 'Task completed: ' + task.text : 'Task marked active: ' + task.text);
+  });
+
+  list.addEventListener('click', event => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+    const item = button.closest('[data-id]');
+    const task = tasks.find(entry => entry.id === item.dataset.id);
+    if (!task) return;
+
+    if (button.dataset.action === 'delete') {
+      tasks = tasks.filter(entry => entry.id !== task.id);
+      saveTasks();
+      render();
+      announce('Task deleted: ' + task.text);
+    } else if (button.dataset.action === 'edit') {
+      const editForm = document.createElement('form');
+      editForm.className = 'todo-edit-form';
+      const editInput = document.createElement('input');
+      editInput.className = 'edit-input';
+      editInput.type = 'text';
+      editInput.maxLength = 120;
+      editInput.required = true;
+      editInput.value = task.text;
+      editInput.setAttribute('aria-label', 'Edit task text');
+      const save = document.createElement('button');
+      save.type = 'submit';
+      save.className = 'todo-action';
+      save.textContent = 'Save';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'todo-action';
+      cancel.dataset.action = 'cancel-edit';
+      cancel.textContent = 'Cancel';
+      editForm.append(editInput, save, cancel);
+      item.replaceChildren(editForm);
+      editInput.focus();
+      editInput.select();
+    } else if (button.dataset.action === 'cancel-edit') {
+      render();
+    }
+  });
+
+  list.addEventListener('submit', event => {
+    const editForm = event.target.closest('.todo-edit-form');
+    if (!editForm) return;
+    event.preventDefault();
+    const item = editForm.closest('[data-id]');
+    const task = tasks.find(entry => entry.id === item.dataset.id);
+    const editedText = editForm.querySelector('input').value.trim();
+    if (!task || !editedText) return;
+    task.text = editedText;
+    saveTasks();
+    render();
+    announce('Task updated: ' + editedText);
+  });
+
+  filterButtons.addEventListener('click', event => {
+    const button = event.target.closest('[data-filter]');
+    if (!button) return;
+    filter = button.dataset.filter;
+    filterButtons.querySelectorAll('[data-filter]').forEach(option => {
+      const active = option === button;
+      option.classList.toggle('is-active', active);
+      option.setAttribute('aria-pressed', String(active));
+    });
+    render();
+  });
+
+  clearButton.addEventListener('click', () => {
+    const completedCount = tasks.filter(task => task.completed).length;
+    if (!completedCount) return;
+    tasks = tasks.filter(task => !task.completed);
+    saveTasks();
+    render();
+    announce(completedCount + ' completed ' + (completedCount === 1 ? 'task' : 'tasks') + ' cleared.');
+  });
+
+  render();
+})();
