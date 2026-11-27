@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search current weather conditions by city with this responsive JavaScript weather dashboard.">
+  <meta name="theme-color" content="#101827">
+  <title>Weather Dashboard | Your Name</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Your Name home">YN<span>.</span></a>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span aria-hidden="true">◐</span><span class="sr-only">Toggle color theme</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="sr-only">Toggle navigation</span><span aria-hidden="true">☰</span></button>
+    </div>
+    <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation"><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li><li><a href="todo.html">To-Do App</a></li>
+      <li><a href="weather.html" aria-current="page">Weather</a></li><li><a href="contact.html">Contact</a></li>
+    </ul></nav>
+  </div></header>
+  <main id="main-content" class="weather-main container">
+    <section class="page-hero weather-heading">
+      <p class="eyebrow">LIVE CONDITIONS · OPEN-METEO</p>
+      <h1>Weather dashboard<span class="accent">.</span></h1>
+      <p class="hero-lead">A quick look at the weather, wherever you need it. Search for a city to get current conditions.</p>
+    </section>
+    <section class="weather-panel" aria-labelledby="weather-search-title">
+      <h2 id="weather-search-title">Find a city</h2>
+      <form id="weather-form" class="weather-search">
+        <label class="sr-only" for="city-search">City name</label>
+        <input id="city-search" name="city" type="search" maxlength="80" placeholder="Try Coimbatore, London, Tokyo…" autocomplete="off" required>
+        <button class="button" id="weather-submit" type="submit">Search weather</button>
+      </form>
+      <p class="weather-hint">Try a city name in any country. No API key required.</p>
+      <p id="weather-status" class="weather-status" role="status" aria-live="polite">Search for a city to see its current weather.</p>
+      <section id="weather-result" class="weather-result" aria-label="Current weather" hidden>
+        <div class="weather-result-top">
+          <div><p class="eyebrow" id="weather-country">CURRENT WEATHER</p><h2 id="weather-city">—</h2><p id="weather-updated" class="weather-updated"></p></div>
+          <div class="weather-symbol" id="weather-symbol" aria-hidden="true">🌤️</div>
+        </div>
+        <p class="weather-description" id="weather-description">—</p>
+        <div class="weather-temperature"><span id="weather-temperature">—</span><span class="temperature-unit">°C</span></div>
+        <p class="weather-feels">Feels like <strong id="weather-feels">—</strong>°C</p>
+        <div class="weather-metrics">
+          <article class="weather-metric"><span class="metric-icon" aria-hidden="true">💧</span><div><p>Humidity</p><strong id="weather-humidity">—</strong></div><small>%</small></article>
+          <article class="weather-metric"><span class="metric-icon" aria-hidden="true">💨</span><div><p>Wind speed</p><strong id="weather-wind">—</strong></div><small>km/h</small></article>
+          <article class="weather-metric"><span class="metric-icon" aria-hidden="true">🌡️</span><div><p>Apparent temp.</p><strong id="weather-apparent">—</strong></div><small>°C</small></article>
+          <article class="weather-metric"><span class="metric-icon" aria-hidden="true">🌧️</span><div><p>Precipitation</p><strong id="weather-rain">—</strong></div><small>mm</small></article>
+        </div>
+      </section>
+      <p class="weather-attribution">Weather data provided by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.</p>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span class="year">2026</span> Your Name. Built with care.</p><a href="projects.html">Back to projects <span aria-hidden="true">↗</span></a></div></footer>
+</body>
+</html>
