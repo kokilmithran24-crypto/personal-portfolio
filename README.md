@@ -7,6 +7,7 @@ A responsive personal portfolio and interactive to-do application built with HTM
 - `about.html` — Introduction and skills
 - `projects.html` — Project gallery
 - `todo.html` — Interactive to-do app with task CRUD, filters and localStorage persistence
+- `weather.html` — City-search weather dashboard using asynchronous Open-Meteo APIs
 - `contact.html` — Accessible contact form
 
 ## Run locally
@@ -24,6 +25,7 @@ Open `index.html` in a browser, or use a local development server (for example, 
 - Skip-to-content link and keyboard-visible focus
 - Responsive navigation with `aria-expanded` and `aria-controls`
 - To-do app with delegated events, create/read/update/delete, All/Active/Completed filters and localStorage
+- Weather dashboard using async/await, Fetch API, JSON parsing, city geocoding, live weather metrics and error handling
 - Explicit form labels, native validation and a live status region
 - Descriptive page titles, meta descriptions, language and viewport metadata
 - Reduced-motion preference support and responsive layouts
