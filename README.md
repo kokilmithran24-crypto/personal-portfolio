@@ -14,7 +14,7 @@ Open `index.html` in a browser, or use a local development server (for example, 
 ## Personalize before submission
 1. Replace **Your Name** and **YN** with your name/initials across all HTML pages.
 2. Update the biography, skills and project descriptions to reflect your real work.
-3. In `js/main.js`, replace `your.email@example.com` with your email address. The form opens the visitor's email application; it does not store or send messages to a server.
+3. In `main.js`, replace `your.email@example.com` with your email address. The form opens the visitor's email application; it does not store or send messages to a server.
 4. Add links to your real project demos and repositories if available.
 5. Optionally replace the CSS-generated project visuals with your own project screenshots and meaningful alt text.
 
