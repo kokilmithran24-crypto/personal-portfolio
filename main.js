@@ -1,4 +1,32 @@
-// Shared navigation and contact form behaviour.
+// Accessible shared navigation, theme preference and contact form behaviour.
+const root = document.documentElement;
+const themeButton = document.querySelector('.theme-toggle');
+const savedTheme = localStorage.getItem('portfolio-theme');
+const preferredTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+let currentTheme = savedTheme || preferredTheme;
+
+function applyTheme(theme) {
+  currentTheme = theme;
+  root.dataset.theme = theme;
+  if (themeButton) {
+    const dark = theme === 'dark';
+    themeButton.setAttribute('aria-pressed', String(dark));
+    themeButton.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    const icon = themeButton.querySelector('[aria-hidden="true"]');
+    if (icon) icon.textContent = dark ? '☀' : '◐';
+  }
+}
+
+applyTheme(currentTheme);
+
+if (themeButton) {
+  themeButton.addEventListener('click', () => {
+    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    localStorage.setItem('portfolio-theme', nextTheme);
+  });
+}
+
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#primary-navigation');
 
