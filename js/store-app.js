@@ -196,6 +196,13 @@ view.addEventListener("input", event => {
     next.focus();
     next.setSelectionRange(cursor, cursor);
   }
+});
+
+view.addEventListener("change", event => {
+  if (event.target.id === "product-sort") {
+    sortOrder = event.target.value;
+    renderProducts();
+  }
   if (event.target.matches("[data-quantity]")) {
     const id = event.target.dataset.quantity;
     const value = Number(event.target.value);
@@ -205,13 +212,6 @@ view.addEventListener("input", event => {
       updateCartCount();
       announce("Cart quantity updated.");
     }
-  }
-});
-
-view.addEventListener("change", event => {
-  if (event.target.id === "product-sort") {
-    sortOrder = event.target.value;
-    renderProducts();
   }
 });
 
