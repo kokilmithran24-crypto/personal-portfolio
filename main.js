@@ -271,3 +271,100 @@ if (contactForm) {
 
   render();
 })();
+
+
+// Weather dashboard: city geocoding and current conditions via Open-Meteo.
+(() => {
+  const form = document.querySelector('#weather-form');
+  if (!form) return;
+
+  const input = document.querySelector('#city-search');
+  const submit = document.querySelector('#weather-submit');
+  const status = document.querySelector('#weather-status');
+  const result = document.querySelector('#weather-result');
+
+  const weatherCodes = {
+    0: ['Clear sky', '☀️'], 1: ['Mainly clear', '🌤️'],
+    2: ['Partly cloudy', '⛅'], 3: ['Overcast', '☁️'],
+    45: ['Fog', '🌫️'], 48: ['Depositing rime fog', '🌫️'],
+    51: ['Light drizzle', '🌦️'], 53: ['Moderate drizzle', '🌦️'],
+    55: ['Dense drizzle', '🌧️'], 56: ['Light freezing drizzle', '🌧️'],
+    57: ['Dense freezing drizzle', '🌧️'], 61: ['Slight rain', '🌧️'],
+    63: ['Moderate rain', '🌧️'], 65: ['Heavy rain', '🌧️'],
+    66: ['Light freezing rain', '🌧️'], 67: ['Heavy freezing rain', '🌧️'],
+    71: ['Slight snow', '🌨️'], 73: ['Moderate snow', '🌨️'],
+    75: ['Heavy snow', '❄️'], 77: ['Snow grains', '❄️'],
+    80: ['Slight rain showers', '🌦️'], 81: ['Moderate rain showers', '🌧️'],
+    82: ['Violent rain showers', '⛈️'], 85: ['Slight snow showers', '🌨️'],
+    86: ['Heavy snow showers', '❄️'], 95: ['Thunderstorm', '⛈️'],
+    96: ['Thunderstorm with slight hail', '⛈️'], 99: ['Thunderstorm with heavy hail', '⛈️']
+  };
+
+  const setText = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+  };
+
+  function showWeather(place, current) {
+    const [description, symbol] = weatherCodes[current.weather_code] || ['Current conditions', '🌡️'];
+    const placeName = [place.name, place.admin1, place.country].filter(Boolean).join(', ');
+    setText('weather-city', placeName);
+    setText('weather-country', 'CURRENT CONDITIONS');
+    setText('weather-updated', current.time ? 'Local time: ' + current.time.replace('T', ' ') : '');
+    setText('weather-description', description);
+    setText('weather-temperature', Math.round(current.temperature_2m));
+    setText('weather-feels', Math.round(current.apparent_temperature));
+    setText('weather-humidity', current.relative_humidity_2m);
+    setText('weather-wind', Math.round(current.wind_speed_10m));
+    setText('weather-apparent', Math.round(current.apparent_temperature));
+    setText('weather-rain', Number(current.precipitation).toFixed(1));
+    setText('weather-symbol', symbol);
+    result.hidden = false;
+  }
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const city = input.value.trim();
+    if (!city) {
+      input.focus();
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = 'Loading…';
+    result.hidden = true;
+    status.textContent = 'Finding the city and retrieving current weather…';
+
+    try {
+      const geoUrl = new URL('https://geocoding-api.open-meteo.com/v1/search');
+      geoUrl.search = new URLSearchParams({ name: city, count: '1', language: 'en', format: 'json' }).toString();
+      const geoResponse = await fetch(geoUrl);
+      if (!geoResponse.ok) throw new Error('City search is temporarily unavailable. Please try again.');
+      const geoData = await geoResponse.json();
+      const place = geoData.results && geoData.results[0];
+      if (!place) throw new Error('We could not find that city. Check the spelling and try again.');
+
+      const forecastUrl = new URL('https://api.open-meteo.com/v1/forecast');
+      forecastUrl.search = new URLSearchParams({
+        latitude: String(place.latitude),
+        longitude: String(place.longitude),
+        current: 'temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m',
+        timezone: 'auto'
+      }).toString();
+      const weatherResponse = await fetch(forecastUrl);
+      if (!weatherResponse.ok) throw new Error('Weather data is temporarily unavailable. Please try again.');
+      const weatherData = await weatherResponse.json();
+      if (!weatherData.current) throw new Error('The weather provider did not return current conditions for this city.');
+
+      showWeather(place, weatherData.current);
+      status.textContent = 'Current weather loaded for ' + place.name + '.';
+    } catch (error) {
+      status.textContent = error instanceof TypeError
+        ? 'Could not connect. Check your internet connection and try again.'
+        : error.message || 'Something went wrong. Please try again.';
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Search weather';
+    }
+  });
+})();
