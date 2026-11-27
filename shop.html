@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore a responsive demo store with product search, category filters, product details and a persistent shopping cart.">
+  <meta name="theme-color" content="#101827">
+  <title>Studio Market | Demo Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shop.css">
+  <script src="main.js" defer></script>
+  <script type="module" src="js/store-app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Portfolio home">YN<span>.</span></a>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span aria-hidden="true">◐</span><span class="sr-only">Toggle color theme</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="sr-only">Toggle navigation</span><span aria-hidden="true">☰</span></button>
+    </div>
+    <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation"><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li><li><a href="todo.html">To-Do App</a></li>
+      <li><a href="weather.html">Weather</a></li><li><a href="shop.html" aria-current="page">Capstone Store</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></nav>
+  </div></header>
+  <main id="main-content" class="store-main">
+    <section class="store-hero">
+      <div class="container store-hero-inner">
+        <div><p class="eyebrow">THE EVERYDAY EDIT · DEMO STORE</p>
+          <h1>Good things.<br><span class="store-accent">Thoughtfully chosen.</span></h1>
+          <p class="store-lead">A small collection of useful things for work, rest and everything in between.</p>
+          <a class="store-primary-link" href="#/products">Explore the collection <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="store-hero-art" aria-hidden="true"><span class="hero-art-orbit"></span><span class="hero-art-emoji">✳</span><span class="hero-art-note">CURATED<br>FOR DAILY LIFE</span></div>
+      </div>
+    </section>
+    <div class="container store-shell">
+      <div class="store-topline"><p>STUDIO MARKET <span>/</span> INDEPENDENT FINDS</p><a class="store-cart-link" href="#/cart" aria-label="Open shopping cart">Bag <span id="cart-count" class="cart-count" aria-live="polite">0</span></a></div>
+      <div id="store-announcement" class="sr-only" role="status" aria-live="polite"></div>
+      <div id="store-view" tabindex="-1"><div class="store-loading" role="status">Loading the collection…</div></div>
+    </div>
+    <section class="store-values"><div class="container store-values-grid">
+      <article><span aria-hidden="true">✦</span><h2>Thoughtful picks</h2><p>A focused demo catalogue with everyday essentials.</p></article>
+      <article><span aria-hidden="true">↗</span><h2>Simple shopping</h2><p>Browse, filter and keep your bag saved in this browser.</p></article>
+      <article><span aria-hidden="true">♡</span><h2>Made to explore</h2><p>A responsive front-end capstone built with modular JavaScript.</p></article>
+    </div></section>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span class="year">2026</span> Studio Market · Educational demo store</p><a href="index.html">Back to portfolio <span aria-hidden="true">↗</span></a></div></footer>
+</body>
+</html>
