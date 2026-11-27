@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A simple, responsive to-do list app. Add, edit, complete and filter tasks, saved in your browser.">
+  <meta name="theme-color" content="#101827">
+  <title>To-Do List | Your Name</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header"><div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Your Name home">YN<span>.</span></a>
+    <div class="header-actions">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span aria-hidden="true">◐</span><span class="sr-only">Toggle color theme</span></button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="sr-only">Toggle navigation</span><span aria-hidden="true">☰</span></button>
+    </div>
+    <nav id="primary-navigation" class="primary-nav" aria-label="Primary navigation"><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li><li><a href="todo.html" aria-current="page">To-Do App</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></nav>
+  </div></header>
+  <main id="main-content" class="todo-main container">
+    <section class="page-hero todo-heading">
+      <p class="eyebrow">PLAN YOUR DAY</p>
+      <h1>My tasks<span class="accent">.</span></h1>
+      <p class="hero-lead">A little progress each day adds up. Capture your tasks and keep moving.</p>
+    </section>
+    <section class="todo-panel" aria-labelledby="todo-title">
+      <div class="todo-panel-heading">
+        <div><p class="eyebrow">TASK MANAGER</p><h2 id="todo-title">Your to-do list</h2></div>
+        <p class="todo-count" id="task-count" aria-live="polite">0 tasks left</p>
+      </div>
+      <form id="todo-form" class="todo-form">
+        <label class="sr-only" for="new-task">Add a task</label>
+        <input id="new-task" name="task" type="text" maxlength="120" placeholder="What do you need to do?" autocomplete="off" required>
+        <button class="button" type="submit">Add task</button>
+      </form>
+      <div class="todo-toolbar">
+        <div class="todo-filters" role="group" aria-label="Filter tasks">
+          <button type="button" class="filter-button is-active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="filter-button" data-filter="active" aria-pressed="false">Active</button>
+          <button type="button" class="filter-button" data-filter="completed" aria-pressed="false">Completed</button>
+        </div>
+        <button type="button" id="clear-completed" class="clear-button">Clear completed</button>
+      </div>
+      <ul id="todo-list" class="todo-list" aria-label="Tasks"></ul>
+      <p id="empty-state" class="empty-state">No tasks here yet. Add one above to get started.</p>
+      <p id="todo-status" class="sr-only" role="status" aria-live="polite"></p>
+    </section>
+    <p class="todo-footnote">Your tasks are saved in this browser using local storage. They stay here when you reload this page on the same browser.</p>
+  </main>
+  <footer class="site-footer"><div class="container footer-inner"><p>© <span class="year">2026</span> Your Name. Built with care.</p><a href="projects.html">Back to projects <span aria-hidden="true">↗</span></a></div></footer>
+</body>
+</html>
